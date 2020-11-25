@@ -1,0 +1,52 @@
+#picture{
+  width: 350px;
+  height: 400px;
+  background-image: url("../../assets/images/MjWOaJD-YjI.jpg");
+  margin: auto;
+  background-size: cover;
+  text-align: center;
+}
+#start{
+  background-color: #E6E6FA;
+}
+#text{
+  position: relative;
+  top: 73%;
+  font-family: monospace;
+  font-weight: bolder;
+  font-size: 20px;
+  color: brown;
+}
+h1{
+  font-family: monospace;
+  text-align: center;
+}
+.message{
+  text-align: center;
+  font-family: monospace;
+  font-size: 20px;
+}
+.form_authorization{
+  border: 5px solid #483D8B;
+  border-radius: 10px;
+  margin: auto;
+  width: 500px;
+  font-family: monospace;
+}
+.p-float-label{
+  margin: 5px;
+}
+.text_authorization{
+  margin: 5px;
+}
+input{
+  margin-right: 5px;
+}
+button{
+  position: relative;
+  left: 40%;
+  font-size: 15px;
+  margin: 5px;
+  width: 100px;
+  font-family: monospace;
+}

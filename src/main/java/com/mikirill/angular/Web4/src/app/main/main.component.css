@@ -70,3 +70,19 @@ p-slider, p-dropdown {
   font-size: 15px;
   width: 100px;
 }
+#result_table {
+  width: 70%;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+  color: black;
+  font-family: monospace;
+  font-size: 15px;
+}
+#main_page{
+  background-color: #E6E6FA;
+}
+.columns{
+  word-wrap: break-word;
+}

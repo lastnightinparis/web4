@@ -1,117 +1,113 @@
-<table width="100%">
-  <tr>
-    <td colspan="2">
-      <div id="user">
-        <img src="../../assets/images/EXVLWe6y828.jpg" width="50" height="50" alt="User"/>
-        <span>{{currentUser}}</span> <!-- Здесь будет имя пользователя, надо будет потом добавить загрузку -->
-        <button routerLink="/start" id="exit" pButton type="button" label="Exit"
-                class="p-button-text p-button-raised"></button>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <div id="form_block">
-        <div class="values">X value</div>
-        <p-dropdown [options]="valuesX" [showClear]="true" [(ngModel)]="valueX" placeholder="Select X"
-                    [virtualScroll]="true" [itemSize]="31" [filter]="false" p-input-filled></p-dropdown>
-        <div class="values">Y value: {{valueY}}</div>
-        <p-slider [(ngModel)]="valueY" [min]="-3" [max]="5" [step]="1" [style]="{width:'15vw'}"></p-slider>
-        <div class="values">R value</div>
-        <p-dropdown [options]="valuesR" [showClear]="true" [(ngModel)]="valueR" placeholder="Select R"
-                    [virtualScroll]="true" [itemSize]="31" [filter]="false" (onChange)="updateDots()"></p-dropdown>
-        <br>
-        <p>{{valueR}}</p>
-        <button class="buttons" pButton label="Send" type="submit" (click)="onSubmit()"></button>
-        <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
-        <button class="buttons" pButton (click)="confirm()" label="Reset"></button>
-      </div>
-      <p-dialog header="AAAAAAAAAAAA" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
-                [draggable]="false" [resizable]="false">
-        <p class="p-m-0">{{errorMessage}}</p>
-      </p-dialog>
-    </td>
-    <td id="svg_block">
-      <div>
-        <svg height="300" width="300" xmlns="http://www.w3.org/2000/svg" class="coordinate_axes" id="svg" (click)="svgClick($event)">
-          <line stroke="black" x1="0" x2="300" y1="150" y2="150"/>
-          <line stroke="black" x1="150" x2="150" y1="0" y2="300"/>
-          <polygon fill="black" points="150,0 144,15 156,15" stroke="black"/>
-          <polygon fill="black" points="300,150 285,156 285,144" stroke="black"/>
-
-          <polygon fill="#D8BFD8" fill-opacity="0.5" points="150,200 150,150 100,150" stroke="#BC8F8F"
-                   stroke-width="2"/>
-
-          <polygon fill="#D8BFD8" fill-opacity="0.5" points="150,150 150,100 50,100 50,150"
-                   stroke="#BC8F8F" stroke-width="2"/>
-          <path d="M 150 200 A 50 50, 90, 0, 0, 200 150 L 150 150 Z" fill="#D8BFD8" fill-opacity="0.5"
-                stroke="#BC8F8F" stroke-width="2"/>
-
-          <line stroke="black" x1="200" x2="200" y1="155" y2="145"/>
-          <line stroke="black" x1="250" x2="250" y1="155" y2="145"/>
-
-          <line stroke="black" x1="50" x2="50" y1="155" y2="145"/>
-          <line stroke="black" x1="100" x2="100" y1="155" y2="145"/>
-
-          <line stroke="black" x1="145" x2="155" y1="100" y2="100"/>
-          <line stroke="black" x1="145" x2="155" y1="50" y2="50"/>
-
-          <line stroke="black" x1="145" x2="155" y1="200" y2="200"/>
-          <line stroke="black" x1="145" x2="155" y1="250" y2="250"/>
-
-          <text fill="black" x="195" y="140">R/2</text>
-          <text fill="black" x="252" y="140">R</text>
-
-          <text fill="black" x="40" y="140">-R</text>
-          <text fill="black" x="90" y="140">-R/2</text>
-
-          <text fill="black" x="160" y="105">R/2</text>
-          <text fill="black" x="288" y="140">X</text>
-          <text fill="black" x="160" y="45">R</text>
-
-          <text fill="black" x="160" y="205">-R/2</text>
-          <text fill="black" x="160" y="265">-R</text>
-
-          <text fill="black" x="160" y="10">Y</text>
-        </svg>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-    </td>
-  </tr>
-</table>
-<div>
-  <p-table>
-    <!--  <ng-template pTemplate="header" let-columns>-->
+<div id="main_page">
+  <table width="100%">
     <tr>
-      <th *ngFor="let col of columns">
-        {{col.header}}
-      </th>
-    </tr>
-    <!--  </ng-template>-->
-    <!--  <ng-template pTemplate="body" let-rowData let-columns="columns">-->
-    <tr>
-      <td>
-        <!--        {{rowData[col.field]}}-->
+      <td colspan="2">
+        <div id="user">
+
+          <img src="assets/images/EXVLWe6y828.jpg" width="50" height="50" alt="User"/>
+          <span>{{currentUser}}</span> <!-- Здесь будет имя пользователя, надо будет потом добавить загрузку -->
+          <button routerLink="/start" id="exit" pButton type="button" label="Exit"
+                  class="p-button-text p-button-raised"></button>
+        </div>
       </td>
     </tr>
-    <!--  </ng-template>-->
-  </p-table>
-</div>
+    <tr>
+      <td>
+        <div id="form_block">
+          <div class="values">X value</div>
+          <p-dropdown [options]="valuesX" [showClear]="true" [(ngModel)]="valueX" placeholder="Select X"
+                      [virtualScroll]="true" [itemSize]="31" [filter]="false" p-input-filled></p-dropdown>
+          <div class="values">Y value: {{valueY}}</div>
+          <p-slider [(ngModel)]="valueY" [min]="-3" [max]="5" [step]="1" [style]="{width:'15vw'}"></p-slider>
+          <div class="values">R value</div>
+          <p-dropdown [options]="valuesR" [showClear]="true" [(ngModel)]="valueR" placeholder="Select R"
+                      [virtualScroll]="true" [itemSize]="31" [filter]="false" (onChange)="updateDots()"></p-dropdown>
+          <br>
+          <button class="buttons" pButton label="Send" type="submit" (click)="onSubmit()"></button>
+          <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+          <button class="buttons" pButton (click)="confirm()" label="Reset"></button>
+        </div>
+        <p-dialog header="AAAAAAAAAAAA" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}"
+                  [baseZIndex]="10000"
+                  [draggable]="false" [resizable]="false">
+          <p class="p-m-0">{{errorMessage}}</p>
+        </p-dialog>
+      </td>
+      <td id="svg_block">
+        <div>
+          <svg height="300" width="300" xmlns="http://www.w3.org/2000/svg" class="coordinate_axes" id="svg"
+               (click)="svgClick($event)">
+            <line stroke="black" x1="0" x2="300" y1="150" y2="150"/>
+            <line stroke="black" x1="150" x2="150" y1="0" y2="300"/>
+            <polygon fill="black" points="150,0 144,15 156,15" stroke="black"/>
+            <polygon fill="black" points="300,150 285,156 285,144" stroke="black"/>
 
-<!--<div>-->
-<!--  <p-table>-->
-<!--      <tr>-->
-<!--        <th>X</th>-->
-<!--        <th>Y</th>-->
-<!--        <th>R</th>-->
-<!--        <th>Current Time</th>-->
-<!--        <th>Execution Time</th>-->
-<!--        <th>Hit Result</th>-->
-<!--      </tr>-->
-<!--      <tr>-->
-<!--      </tr>-->
-<!--  </p-table>-->
-<!--</div>-->
+            <polygon fill="#D8BFD8" fill-opacity="0.5" points="150,200 150,150 100,150" stroke="#BC8F8F"
+                     stroke-width="2"/>
+
+            <polygon fill="#D8BFD8" fill-opacity="0.5" points="150,150 150,100 50,100 50,150"
+                     stroke="#BC8F8F" stroke-width="2"/>
+            <path d="M 150 200 A 50 50, 90, 0, 0, 200 150 L 150 150 Z" fill="#D8BFD8" fill-opacity="0.5"
+                  stroke="#BC8F8F" stroke-width="2"/>
+
+            <line stroke="black" x1="200" x2="200" y1="155" y2="145"/>
+            <line stroke="black" x1="250" x2="250" y1="155" y2="145"/>
+
+            <line stroke="black" x1="50" x2="50" y1="155" y2="145"/>
+            <line stroke="black" x1="100" x2="100" y1="155" y2="145"/>
+
+            <line stroke="black" x1="145" x2="155" y1="100" y2="100"/>
+            <line stroke="black" x1="145" x2="155" y1="50" y2="50"/>
+
+            <line stroke="black" x1="145" x2="155" y1="200" y2="200"/>
+            <line stroke="black" x1="145" x2="155" y1="250" y2="250"/>
+
+            <text fill="black" x="195" y="140">R/2</text>
+            <text fill="black" x="252" y="140">R</text>
+
+            <text fill="black" x="40" y="140">-R</text>
+            <text fill="black" x="90" y="140">-R/2</text>
+
+            <text fill="black" x="160" y="105">R/2</text>
+            <text fill="black" x="288" y="140">X</text>
+            <text fill="black" x="160" y="45">R</text>
+
+            <text fill="black" x="160" y="205">-R/2</text>
+            <text fill="black" x="160" y="265">-R</text>
+
+            <text fill="black" x="160" y="10">Y</text>
+          </svg>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+    </tr>
+  </table>
+  <div id="result_table">
+    <p-table [value]="rows" class="p-datatable	p-datatable-header">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="columns">X</th>
+          <th class="columns">Y</th>
+          <th class="columns">R</th>
+          <th class="columns">Current time</th>
+          <th class="columns">Execute Time</th>
+          <th class="columns">Hit result</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="columns">{{row.x}}</td>
+          <td class="columns">{{row.y}}</td>
+          <td class="columns">{{row.r}}</td>
+          <td class="columns">{{row.currentTime}}</td>
+          <td class="columns">{{row.scriptTime}}</td>
+          <td class="columns">{{row.hitResult}}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>

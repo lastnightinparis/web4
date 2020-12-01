@@ -9,29 +9,32 @@
       In order to start working with our unreal site, you need to log in</p>
   </div>
   <br>
-  <form novalidate [formGroup]="userform" class="form_authorization">
-    <br>
-    <div class="text_authorization">Enter your username</div>
-    <br>
-    <span class="p-float-label p-input-filled">
+    <form novalidate [formGroup]="userform" class="form_authorization">
+      <div>
+
+      <br>
+      <div class="text_authorization">Enter your username</div>
+      <br>
+      <span class="p-float-label p-input-filled">
       <input id="float-input" type="text" pInputText formControlName="username" required/>
     <label for="float-input" class="label">Username</label>
       <p-message severity="error" *ngIf="formErrors.username" text="{{formErrors.username}}"></p-message>
 </span>
-    <br>
-    <div class="text_authorization">Enter your password</div>
-    <br>
-    <span class="p-float-label p-input-filled">
+      <br>
+      <div class="text_authorization">Enter your password</div>
+      <br>
+      <span class="p-float-label p-input-filled">
       <input type="password" pPassword id="password_input" formControlName="password" required/>
       <label for="password_input">Password</label>
       <p-message severity="error" *ngIf="formErrors.password" text="{{formErrors.password}}"></p-message>
-</span>
-    <br>
-    <button pButton routerLink="/main" type="submit" label="Log in" class="p-button-raised p-button-rounded"
-            (click)="onSubmit()" [disabled]="userform.invalid"></button>
+    </span>
+      </div>
 
-    <!--Кнопка должна будет отправлять форму на сервер-->
-  </form>
+      <br>
+      <button pButton routerLink="/main" type="submit" label="Log in" class="p-button-raised p-button-rounded"
+              (click)="onSubmit()" [disabled]="userform.invalid"></button>
+      <!--Кнопка должна будет отправлять форму на сервер-->
+    </form>
   <br>
 </div>
 

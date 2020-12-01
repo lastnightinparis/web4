@@ -28,7 +28,7 @@ span {
 }
 
 #exit {
-  text-align: left;
+  text-align: center;
   /*color: aliceblue;*/
   background-color: aliceblue;
   position: absolute;
@@ -37,8 +37,9 @@ span {
 }
 #svg_block{
   margin: 0 auto;
-  display: flex;
+  display: inline-block;
   justify-content: center;
+  width: 50%;
 }
 table {
   background-color: #E6E6FA;
@@ -48,7 +49,8 @@ table {
 #form_block {
   text-align: center;
   margin:0 auto;
-  display: table;
+  display: inline-block;
+  width: 50%;
 }
 
 .values {
@@ -79,10 +81,35 @@ p-slider, p-dropdown {
   color: black;
   font-family: monospace;
   font-size: 15px;
+  background-color: #E6E6FA;
 }
 #main_page{
   background-color: #E6E6FA;
+  display: inline-block;
+  list-style: none;
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  margin: auto 0;
 }
 .columns{
   word-wrap: break-word;
 }
+.main_block{
+  justify-content: center;
+  position: center;
+  display: inline-block;
+}
+@media (max-width: 570px) {
+  #svg_block{
+    display: table;
+  }
+  #form_block{
+    display: table;
+    margin-bottom: 10px;
+  }
+  #result_table{
+    width: 100%;
+  }
+}
+

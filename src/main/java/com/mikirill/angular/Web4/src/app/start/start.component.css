@@ -30,10 +30,10 @@ h1{
   word-wrap: break-word;
 }
 .form_authorization{
-  border: 5px solid #483D8B;
+  /*border: 5px solid #483D8B;*/
   border-radius: 10px;
   margin: auto;
-  width: 20vmax;
+  width: 50vw;
   font-family: monospace;
 }
 .p-float-label{
@@ -49,9 +49,22 @@ button{
   position: relative;
   margin: 5px 40%;
   font-size: 15px;
-  width: 5vmax;
+  width: 10vw;
   font-family: monospace;
 }
 input, label{
-  width: 10vmax;
+  width: 40vw;
+}
+@media (max-width: 550px) {
+  button{
+    margin: 0 auto;
+  }
+  input, label{
+    width: 100px;
+  }
+}
+@media (max-width: 780px) {
+  button{
+    width: 80px;
+  }
 }

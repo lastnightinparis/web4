@@ -22,7 +22,6 @@ import {ConfirmationService} from 'primeng/api';
 import {MainService} from "./services/main.service";
 import {DialogModule} from "primeng/dialog";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
-
 @NgModule({
   declarations: [
     AppComponent,

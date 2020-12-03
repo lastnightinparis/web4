@@ -27,7 +27,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(applicationUser.getUsername(), applicationUser.getPassword(), new ArrayList<>());
     }
 
-    public boolean isUserConfirmed() {
-        return false;
-    }
 }

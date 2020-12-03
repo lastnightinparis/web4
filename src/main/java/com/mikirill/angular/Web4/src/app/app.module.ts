@@ -21,7 +21,9 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 import {MainService} from "./services/main.service";
 import {DialogModule} from "primeng/dialog";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
+import {AuthGuard} from "./guards/auth.guard";
+import {AuthInterceptor} from "./interceptors/auth.interceptor";
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +52,11 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
     DialogModule,
 
   ],
-  providers: [HttpClientModule, MainService, ConfirmationService, HttpClient],
+  providers: [HttpClientModule, MainService, ConfirmationService, HttpClient, AuthGuard, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

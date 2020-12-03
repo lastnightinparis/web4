@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ConfirmationService, Message, SelectItem} from 'primeng/api';
 import {MainService} from "../services/main.service";
 import {TableValues} from "./tableValues";
+import {HttpClient, HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-main',
@@ -9,8 +10,9 @@ import {TableValues} from "./tableValues";
   styleUrls: ['./main.component.css']
 })
 
-
 export class MainComponent implements OnInit {
+  url = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/points";
+  url_test = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
   selectedValues = {
     valueX: 0,
     valueY: 0,
@@ -36,7 +38,7 @@ export class MainComponent implements OnInit {
   valuesR: SelectItem[];
   currentUser: string;
 
-  constructor(private mainService: MainService, private confirmationService: ConfirmationService) {
+  constructor(private mainService: MainService, private confirmationService: ConfirmationService, private http: HttpClient) {
     this.valuesX = [
       {label: '-2', value: -2},
       {label: '-1.5', value: -1.5},
@@ -92,12 +94,15 @@ export class MainComponent implements OnInit {
       this.selectedValues.valueR = this.valueR;
       this.createDot(this.valueX * 100 / this.valueR + 150, 150 - this.valueY * 100 / this.valueR, this.valueR);
       this.saveDots(this.valueX * 100 / this.valueR + 150, 150 - this.valueY * 100 / this.valueR, this.valueR);
-//       this.sendValues();
+      this.commitPoint(localStorage.getItem("user"), this.valueR, this.valueX, this.valueY);
     }
   }
 
   sendValues() {
-    this.mainService.postValues(this.selectedValues).subscribe(data => this.rows.push(data));
+    // this.mainService.postValues(this.selectedValues).subscribe(data => this.rows.push(data));
+    this.http.post(this.url_test, {}).subscribe();
+
+    console.log("send values");
   }
 
   svgClick(event) {
@@ -177,10 +182,14 @@ export class MainComponent implements OnInit {
         this.resetSVG();
       }
     });
+
+    this.deletePoints(localStorage.getItem("user"));
   }
+
   onExit() {
-    sessionStorage.setItem('main','no');
+    sessionStorage.setItem('main', 'no');
   }
+
   resetSVG() {
     this.dots = '';
     localStorage.setItem('dots', this.dots);
@@ -190,6 +199,25 @@ export class MainComponent implements OnInit {
   showModalDialog(text) {
     this.errorMessage = text;
     this.displayModal = true;
+  }
+
+  commitPoint(username: string, r: number, x: number, y: number) {
+
+    // this.http.get(this.url_test, {});
+    this.http.post(this.url, {
+      "username": username,
+      "x": x,
+      "y": y,
+      "r": r,
+    }).subscribe();
+
+    console.log("commit point")
+  }
+
+  deletePoints(username: string) {
+    this.http.delete(this.url, {
+      params: new HttpParams().set('username', username)
+    }).subscribe();
   }
 }
 

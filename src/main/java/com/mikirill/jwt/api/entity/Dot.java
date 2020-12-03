@@ -34,7 +34,7 @@ public class Dot implements Serializable {
     @Column(name = "hit_result")
     private String hit_result;
     @Column(name = "jsessionid")
-    private String jsessionid;
+    private String username;
 
     public int getId() {
         return id;
@@ -85,11 +85,11 @@ public class Dot implements Serializable {
     }
 
     public String getJsessionid() {
-        return jsessionid;
+        return username;
     }
 
     public void setJsessionid(String jsessionid) {
-        this.jsessionid = jsessionid;
+        this.username = jsessionid;
     }
 
     public String getHit_result() {

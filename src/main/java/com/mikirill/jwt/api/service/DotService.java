@@ -11,11 +11,12 @@ import java.util.Arrays;
 @Service
 public class DotService {
 
-    public boolean validate(Double x, Double y, Double r) {
+    public boolean validate(Integer x, Double y, Integer r) {
         double[] r_values = {0.5, 1, 1.5, 2};
         return (x > -2 && x < 2 && y > -3 && y < 5 && Arrays.asList(r_values).contains(r));
     }
-    private boolean checkArea(double x, double y, double r) {
+
+    public boolean checkArea(int x, double y, int r) {
         if (x >= 0 && y >= 0)
             return checkFirstQ(x, y, r);
         else if (x <= 0 && y <= 0)
@@ -26,20 +27,20 @@ public class DotService {
             return checkSecondQ(x, y, r);
     }
 
-    private boolean checkFirstQ(double x, double y, double r) {
+    private boolean checkFirstQ(int x, double y, int r) {
         return false;
     }
 
-    private boolean checkSecondQ(double x, double y, double r) {
-        return (x >= -r && y <= r / 2);
+    private boolean checkSecondQ(int x, double y, int r) {
+        return (x >= -r && y <= r * .5);
     }
 
-    private boolean checkThirdQ(double x, double y, double r) {
-        return y > - x - r / 2;
+    private boolean checkThirdQ(int x, double y, int r) {
+        return y > -x - r * .5;
     }
 
-    private boolean checkFourthQ(double x, double y, double r) {
-        return (x * x + y * y <= (r * r)/4);
+    private boolean checkFourthQ(int x, double y, int r) {
+        return (x * x + y * y <= (r * r) * .25);
     }
 
 }

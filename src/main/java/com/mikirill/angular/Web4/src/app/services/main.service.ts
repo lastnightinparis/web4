@@ -14,7 +14,7 @@ export class MainService {
   setCurrentUser(cu: string) {
     this.currentUser = cu;
   }
-  postValues(values):Observable<any> {
-    return this.httpClient.post('/responses', values);
-  }
+  // postValues(values):Observable<any> {
+  //   return this.httpClient.post('/responses', values);
+  // }
 }

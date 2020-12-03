@@ -10,6 +10,6 @@ import java.util.List;
  * Created on 02.12.2020
  */
 public interface DotRepository extends JpaRepository<Dot, Integer> {
-    void deleteDotsByJsessionid(String jsessionid);
-    List<Dot> getAllByJsessionid(String jsessionid);
+    void deleteDotsByUsername(String username);
+    List<Dot> getAllByUsername(String username);
 }

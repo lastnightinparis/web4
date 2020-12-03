@@ -6,16 +6,11 @@ package com.mikirill.jwt.api.entity;
  */
 
 
-import com.mikirill.jwt.api.validator.RValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -26,21 +21,10 @@ public class Dot implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @NotNull
-    @NotBlank
-    @Min(-2)
-    @Max(2)
     @Column(name = "x_value")
     private double x_value;
-    @NotNull
-    @NotBlank
-    @Min(-3)
-    @Max(5)
     @Column(name = "y_value")
     private double y_value;
-    @NotNull
-    @NotBlank
-    @RValue
     @Column(name = "r_value")
     private int r_value;
     @Column(name = "script_time")

@@ -11,10 +11,10 @@ import java.util.Arrays;
 @Service
 public class DotService {
 
-//    public boolean validate(Double x, Double y, int r) {
-//        Integer[] a = {1, 2, 3, 4, 5};
-//        return (x > -5 && x < 5 && y > -3 && y < 5 && Arrays.asList(a).contains(r));
-//    }
+    public boolean validate(Double x, Double y, Double r) {
+        double[] r_values = {0.5, 1, 1.5, 2};
+        return (x > -2 && x < 2 && y > -3 && y < 5 && Arrays.asList(r_values).contains(r));
+    }
     private boolean checkArea(double x, double y, double r) {
         if (x >= 0 && y >= 0)
             return checkFirstQ(x, y, r);

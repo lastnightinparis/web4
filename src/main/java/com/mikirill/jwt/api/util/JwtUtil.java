@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.function.Function;
  */
 @Service
 public class JwtUtil {
-    private String secret = "javatechie";
+    private String secret = "secret";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -30,6 +31,7 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }

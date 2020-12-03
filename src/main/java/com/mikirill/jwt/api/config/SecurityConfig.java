@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -38,10 +37,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET, "/ng/*.js", "/ng/*.css", "/ng/*.woff2", "/ng/*.ico", "/ng/*.jpg", "/assets/images/*.jpg").permitAll()
-                .anyRequest().authenticated().and().exceptionHandling()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().formLogin().loginPage("/ng/index.html").permitAll();
+        http.csrf().disable().exceptionHandling();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/ng/*.js", "/ng/*.css", "/ng/*.woff2", "/ng/*.ico", "/ng/*.jpg", "/assets/images/*.jpg")
+                .permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/authenticate", "/sign-in").permitAll()
+                .anyRequest().authenticated()
+                .and().formLogin().loginPage("/ng/index.html").permitAll()
+                .and().exceptionHandling()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

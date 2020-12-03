@@ -3,11 +3,9 @@ package com.mikirill.jwt.api.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author Kir
@@ -19,6 +17,7 @@ import javax.persistence.Table;
 @Table(name = "app_users")
 public class ApplicationUser {
     @Id
+    @GeneratedValue
     @Column(name = "user_id")
     private int id;
     @Column(name = "username")
@@ -28,6 +27,11 @@ public class ApplicationUser {
 
     public ApplicationUser(int id, String username, String password) {
         this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
+    public ApplicationUser(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -62,9 +62,11 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(sessionStorage.getItem('main'));
     this.mainService.getCurrentUser().subscribe(user => {
       this.currentUser = user
     });
+    console.log(this.mainService.getCurrentUser().subscribe(user1 => console.log(user1)));
     if (this.currentUser !== undefined) {
       localStorage.setItem('user', this.currentUser);
     } else {
@@ -176,7 +178,9 @@ export class MainComponent implements OnInit {
       }
     });
   }
-
+  onExit() {
+    sessionStorage.setItem('main','no');
+  }
   resetSVG() {
     this.dots = '';
     localStorage.setItem('dots', this.dots);

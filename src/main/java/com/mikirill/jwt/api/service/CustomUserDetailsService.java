@@ -19,10 +19,15 @@ import java.util.ArrayList;
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private ApplicationUserRepository repository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         ApplicationUser applicationUser = repository.findByUsername(username);
         System.out.println(applicationUser.toString());
         return new User(applicationUser.getUsername(), applicationUser.getPassword(), new ArrayList<>());
+    }
+
+    public boolean isUserConfirmed() {
+        return false;
     }
 }

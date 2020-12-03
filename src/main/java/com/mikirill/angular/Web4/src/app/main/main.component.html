@@ -1,11 +1,10 @@
 <div id="user" width="100%">
-
   <img
     src="https://sun9-75.userapi.com/impg/QrW7fvxWdpVFTVhQNmpdBYoyDfTjAVA1jeXsSw/EXVLWe6y828.jpg?size=1024x684&quality=96&proxy=1&sign=9b847133c0d294c7b4b855c191b02c8b"
     width="50" height="50" alt="User"/>
   <span>{{currentUser}}</span> <!-- Здесь будет имя пользователя, надо будет потом добавить загрузку -->
   <button routerLink="/start" id="exit" pButton type="button" label="Exit"
-          class="p-button-text p-button-raised"></button>
+          class="p-button-text p-button-raised" (click)="onExit()"></button>
 </div>
 <div id="main_page">
   <div id="form_block" class="main_block">
@@ -34,7 +33,6 @@
       <line stroke="black" x1="150" x2="150" y1="0" y2="300"/>
       <polygon fill="black" points="150,0 144,15 156,15" stroke="black"/>
       <polygon fill="black" points="300,150 285,156 285,144" stroke="black"/>
-
       <polygon fill="#D8BFD8" fill-opacity="0.5" points="150,200 150,150 100,150" stroke="#BC8F8F"
                stroke-width="2"/>
 
@@ -93,7 +91,6 @@
           <td class="columns">{{row.hitResult}}</td>
         </tr>
       </ng-template>
-
     </p-table>
   </div>
 </div>

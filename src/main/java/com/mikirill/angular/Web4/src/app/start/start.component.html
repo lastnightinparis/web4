@@ -30,9 +30,11 @@
     </span>
       </div>
 
+
       <br>
-      <button pButton routerLink="/main" type="submit" label="Log in" class="p-button-raised p-button-rounded"
-              (click)="onSubmit()" [disabled]="userform.invalid"></button>
+      <button pButton type="submit" label="Log in" (click)="onSubmit()" class="p-button-raised p-button-rounded"
+              [disabled]="userform.invalid"></button>
+      <!-- routerLink="/main"            (click)="onSubmit()" routerLink="/main" -->
       <!--Кнопка должна будет отправлять форму на сервер-->
     </form>
   <br>

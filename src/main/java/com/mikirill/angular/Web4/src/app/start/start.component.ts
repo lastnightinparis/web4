@@ -36,10 +36,12 @@ export class StartComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    localStorage.clear();
-    console.log(sessionStorage.getItem('main'));
+    console.log(sessionStorage.getItem('main') === 'yes');
     if (sessionStorage.getItem('main') === 'yes') {
-      this.router.navigateByUrl("/main");
+      this.router.navigate(["/main"]);
+      console.log('lol');
+    } else {
+      localStorage.clear();
     }
   }
 

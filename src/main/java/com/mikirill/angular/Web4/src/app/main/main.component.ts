@@ -59,24 +59,31 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(sessionStorage.getItem('main'));
-    this.getExistingValues(localStorage.getItem("user")).subscribe(values => this.rows = values);
+    this.getExistingValues(localStorage.getItem("user")).subscribe(values => {
+      this.rows = values;
+      console.log(this.rows.toString());
+      this.dots = '';
+      for (let point of this.rows) {
+        this.dots += point.x_value + ";" + point.y_value + ";" + point.r_value + ";";
+      }
+      console.log(this.dots);
+      localStorage.setItem('dots', this.dots);
+      if (this.dots !== '') {
+        let points = this.dots.split(';');
+        console.log(points.toString());
+        for (let i = 0; i < points.length - 2; i += 3) {
+          this.createDot(this.getXSVG(Number(points[i]), Number(points[i + 2])), this.getYSVG(Number(points[i + 1]), Number(points[i + 2])), Number(points[i + 2]));
+        }
+      }
+    });
     this.mainService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
-    console.log(this.rows.toString());
     console.log(this.mainService.getCurrentUser().subscribe(user1 => console.log(user1)));
     if (this.currentUser !== undefined) {
       localStorage.setItem('user', this.currentUser);
     } else {
       this.currentUser = localStorage.getItem('user');
-    }
-    if (localStorage.getItem('dots') !== null) {
-      let points = localStorage.getItem('dots').split(';');
-      console.log(points.toString());
-      for (let i = 0; i < points.length - 2; i += 3) {
-        this.createDot(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
-        this.saveDots(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
-      }
     }
   }
 
@@ -109,7 +116,7 @@ export class MainComponent implements OnInit {
         console.log(typeof this.valueR);
         this.createDot(cx, cy, this.valueR);
         this.saveDots(cx, cy, this.valueR);
-        this.commitPoint(localStorage.getItem("user"), x, y, this.valueR);
+        this.commitPoint(localStorage.getItem("user"), this.valueR, x, y);
       } else {
         this.showModalDialog('Значения для X или Y выходят за допустимый диапозон');
       }
@@ -239,5 +246,12 @@ export class MainComponent implements OnInit {
     let params = new HttpParams().set("username", username);
     return this.http.get<any>(this.url, {params: params}).pipe(map(points => points.map(point => new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]))));
   }
+  getXSVG(x, r): number {
+    return x * 100 / r + 150;
+  }
+  getYSVG(y, r): number {
+    return 150 - y * 100 /r;
+  }
+
 }
 

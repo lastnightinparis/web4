@@ -4,20 +4,25 @@ import com.mikirill.jwt.api.entity.ApplicationUser;
 import com.mikirill.jwt.api.entity.AuthRequest;
 import com.mikirill.jwt.api.repository.ApplicationUserRepository;
 import com.mikirill.jwt.api.util.JwtUtil;
+import org.aspectj.weaver.bcel.BcelAccessForInlineMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.ls.LSOutput;
 
 /**
  * @author Kir
  * Created on 23.11.2020
  */
 @Controller
-//@Mapping()
 public class SecurityController implements ErrorController {
+
+//    private String salt = "wqe842190rqfkvqab";
 
     @Autowired
     private ApplicationUserRepository repository;
@@ -32,14 +37,16 @@ public class SecurityController implements ErrorController {
     @PostMapping(value = "/authenticate", consumes = "application/json")
     @ResponseBody
     public String generateToken(@RequestBody AuthRequest auth) {
+        String password = BCrypt.hashpw(auth.getPassword(), BCrypt.gensalt());
         try {
-            if (repository.findByUsername(auth.getUsername()) == null)
-                repository.save(new ApplicationUser(auth.getUsername(), auth.getPassword()));
+            if (repository.findByUsername(auth.getUsername()) == null) {
+                repository.save(new ApplicationUser(auth.getUsername(), password));
+            }
+            System.out.println(BCrypt.checkpw(password, repository.findByUsername(auth.getUsername()).getPassword()));
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(auth.getUsername(), auth.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(auth.getUsername(), password));
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("non authenticate");
             return "{\"token\": \"" + "bad" + "\"}";
         }
         String s = jwtUtil.generateToken(auth.getUsername());

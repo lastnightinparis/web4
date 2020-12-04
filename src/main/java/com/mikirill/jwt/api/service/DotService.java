@@ -13,7 +13,7 @@ public class DotService {
 
     public boolean validate(Integer x, Double y, Integer r) {
         double[] r_values = {0.5, 1, 1.5, 2};
-        return (x > -2 && x < 2 && y > -3 && y < 5 && Arrays.asList(r_values).contains(r));
+        return (x >= -2 && x <= 2 && y >= -3 && y <= 5 && Arrays.asList(r_values).contains(r));
     }
 
     public boolean checkArea(int x, double y, int r) {

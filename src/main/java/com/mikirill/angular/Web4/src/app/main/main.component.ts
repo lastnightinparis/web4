@@ -66,7 +66,7 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     console.log(sessionStorage.getItem('main'));
     this.mainService.getCurrentUser().subscribe(user => {
-      this.currentUser = user
+      this.currentUser = user;
     });
     console.log(this.mainService.getCurrentUser().subscribe(user1 => console.log(user1)));
     if (this.currentUser !== undefined) {
@@ -98,23 +98,18 @@ export class MainComponent implements OnInit {
     }
   }
 
-  sendValues() {
-    // this.mainService.postValues(this.selectedValues).subscribe(data => this.rows.push(data));
-    this.http.post(this.url_test, {}).subscribe();
-
-    console.log("send values");
-  }
-
   svgClick(event) {
     let dim = document.getElementById('svg').getBoundingClientRect();
     let cx = event.clientX - dim.left;
     let cy = event.clientY - dim.top;
     if (this.valueR !== undefined && this.valueR !== null) {
+      let x = ((cx - 150) * this.valueR / 100);
+      let y = (150 - cy) * this.valueR / 100;
       if (this.checkODZ(cx, cy, this.valueR)) {
         console.log(typeof this.valueR);
         this.createDot(cx, cy, this.valueR);
         this.saveDots(cx, cy, this.valueR);
-        this.sendValues();
+        this.commitPoint(localStorage.getItem("user"), x, y, this.valueR);
       } else {
         this.showModalDialog('Значения для X или Y выходят за допустимый диапозон');
       }
@@ -122,6 +117,8 @@ export class MainComponent implements OnInit {
       this.showModalDialog('Выберите значение для R');
     }
   }
+
+
 
   checkODZ(cx, cy, r): boolean {
     let x = ((cx - 150) * r / 100);

@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * @author Kir
@@ -59,8 +57,4 @@ public class DotController {
         dotRepository.deleteDotsByUsername(username);
     }
 
-    @GetMapping("/hello")
-    public void hello() {
-        System.out.println("hello");
-    }
 }

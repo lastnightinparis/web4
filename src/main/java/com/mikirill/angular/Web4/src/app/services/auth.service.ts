@@ -18,11 +18,13 @@ export class AuthService {
   }
 
   login(user) {
+    console.log(user.username);
     // this.http.post(this.url_sign, user);
     this.http.post(this.url_auth, user).subscribe(
       (res: any) => {
         if (res["token"] !== "bad") {
           localStorage.setItem("token", res["token"]);
+          console.log(res["token"] + " is token");
           sessionStorage.setItem('main', 'yes');
           this.router.navigateByUrl("/main");
         } else

@@ -78,6 +78,7 @@ export class StartComponent implements OnInit {
       this.user = this.userform.value;
       this.mainServer.setCurrentUser(this.user.username);//хуйня, надо индетифицировать клиента и взять из бд
       //  сделать отправку
+      localStorage.setItem("user", this.user.username);
       this.authService.login(this.user);
       console.log("успешно отправлено");
     }

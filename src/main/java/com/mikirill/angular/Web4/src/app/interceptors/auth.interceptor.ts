@@ -17,11 +17,15 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     console.log("start intercept");
     if (localStorage.getItem("token") !== null) {
-      request = request.clone({
-        setHeaders: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      if (this.authService.isTokenExpired(localStorage.getItem("token"))) {
+        localStorage.removeItem("token");
+        this.authService.login(localStorage.getItem("user"));
+      } else
+        request = request.clone({
+          setHeaders: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+          }
+        });
     }
     console.log(request.headers.get("Authorization" + " is header"));
     return next.handle(request);

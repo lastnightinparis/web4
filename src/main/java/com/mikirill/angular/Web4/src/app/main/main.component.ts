@@ -3,6 +3,8 @@ import {ConfirmationService, Message, SelectItem} from 'primeng/api';
 import {MainService} from "../services/main.service";
 import {TableValues} from "./tableValues";
 import {HttpClient, HttpParams} from "@angular/common/http";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-main',
@@ -18,16 +20,8 @@ export class MainComponent implements OnInit {
     valueY: 0,
     valueR: 0,
   };
-  rows: TableValues[] = [
-    {
-      x: 0,
-      y: 0,
-      r: 0,
-      currentTime: "2020",
-      scriptTime: 0,
-      hitResult: "FAlSE"
-    }
-  ];
+  currentPoint: TableValues;
+  rows: TableValues[] = [];
   errorMessage = '';
   displayModal = false;
   dots = '';
@@ -65,9 +59,11 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(sessionStorage.getItem('main'));
+    this.getExistingValues(localStorage.getItem("user")).subscribe(values => this.rows = values);
     this.mainService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
+    console.log(this.rows.toString());
     console.log(this.mainService.getCurrentUser().subscribe(user1 => console.log(user1)));
     if (this.currentUser !== undefined) {
       localStorage.setItem('user', this.currentUser);
@@ -75,6 +71,7 @@ export class MainComponent implements OnInit {
       this.currentUser = localStorage.getItem('user');
     }
     let points = localStorage.getItem('dots').split(';');
+    console.log(points.toString());
     for (let i = 0; i < points.length - 2; i += 3) {
       this.createDot(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
       this.saveDots(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
@@ -98,6 +95,7 @@ export class MainComponent implements OnInit {
     }
   }
 
+
   svgClick(event) {
     let dim = document.getElementById('svg').getBoundingClientRect();
     let cx = event.clientX - dim.left;
@@ -117,7 +115,6 @@ export class MainComponent implements OnInit {
       this.showModalDialog('Выберите значение для R');
     }
   }
-
 
 
   checkODZ(cx, cy, r): boolean {
@@ -146,8 +143,8 @@ export class MainComponent implements OnInit {
 
   checkArea(cx, cy, r): boolean {
     //проверка попадания точки в область при клике на свг
-    let x = (cx - 150) * r / 100;
-    let y = (150 - cy) * r / 100;
+    let x = this.getXCoord(cx, r);
+    let y = this.getYCoord(cy, r);
     return (x <= 0 && y >= 0 && x >= -r && y <= r / 2) || (x >= 0 && y <= 0 && x * x + y * y <= (r * r) / 4) || (x <= 0 && y <= 0 && y >= -x - r / 2);
   }
 
@@ -177,10 +174,10 @@ export class MainComponent implements OnInit {
       icon: 'pi pi-info-circle',
       accept: () => {
         this.resetSVG();
+        this.deletePoints(localStorage.getItem("user"));
       }
     });
 
-    this.deletePoints(localStorage.getItem("user"));
   }
 
   onExit() {
@@ -201,20 +198,43 @@ export class MainComponent implements OnInit {
   commitPoint(username: string, r: number, x: number, y: number) {
 
     // this.http.get(this.url_test, {});
-    this.http.post(this.url, {
+    this.http.post<any>(this.url, {
       "username": username,
       "x": x,
       "y": y,
       "r": r,
-    }).subscribe();
+    }).subscribe(point => {
+      this.currentPoint = new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]);
+      console.log(this.currentPoint.hit_result);
+      this.rows.push(this.currentPoint);
+    });
 
-    console.log("commit point")
+    console.log("commit point");
+    // this.mainService.getTableValue(this.url).subscribe(points => console.log(points));
+  }
+
+  getData(res: Response) {
+    return res.json();
   }
 
   deletePoints(username: string) {
     this.http.delete(this.url, {
       params: new HttpParams().set('username', username)
     }).subscribe();
+    this.rows = [];
+  }
+
+  getXCoord(cx, r): number {
+    return (cx - 150) * r / 100;
+  }
+
+  getYCoord(cy, r): number {
+    return (150 - cy) * r / 100;
+  }
+
+  getExistingValues(username: string): Observable<TableValues[]> {
+    let params = new HttpParams().set("username", username);
+    return this.http.get<any>(this.url, {params: params}).pipe(map(points => points.map(point => new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]))));
   }
 }
 

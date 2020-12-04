@@ -27,13 +27,13 @@ public class DotController {
     @Autowired
     private DotRepository dotRepository;
 
-    @GetMapping("/points")
-    public List<Dot> getAll(@RequestBody AuthRequest auth) {
-        return dotRepository.getAllByUsername(auth.getUsername());
+    @GetMapping(value = "/points")
+    public List<Dot> getAll(@RequestParam("username") String username) {
+        return dotRepository.getAllByUsername(username);
     }
 
-    @PostMapping("/points")
-    public void addPoint(@RequestBody PointRequest point) {
+    @PostMapping(value = "/points", produces = "application/json")
+    public Dot addPoint(@RequestBody PointRequest point) {
         System.out.println("inserting");
         Dot dot = new Dot();
         String res;
@@ -49,6 +49,7 @@ public class DotController {
         dot.setHit_result(res);
         dot.setScript_time(System.currentTimeMillis() - time);
         dotRepository.save(dot);
+        return dot;
     }
 
     @DeleteMapping("/points")

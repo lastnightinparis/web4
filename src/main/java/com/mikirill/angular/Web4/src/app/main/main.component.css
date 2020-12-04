@@ -42,7 +42,6 @@ span {
   width: 50%;
 }
 table {
-  background-color: #E6E6FA;
   margin: auto;
 }
 
@@ -75,13 +74,14 @@ p-slider, p-dropdown {
 #result_table {
   width: 70%;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  margin: auto;
-  padding: 20px;
+  margin: 10px auto;
+  padding: 5px;
   text-align: center;
   color: black;
   font-family: monospace;
   font-size: 15px;
-  background-color: #E6E6FA;
+  border-radius: 5px;
+  background-color: #D8BFD8;
 }
 #main_page{
   background-color: #E6E6FA;
@@ -94,6 +94,10 @@ p-slider, p-dropdown {
 }
 .columns{
   word-wrap: break-word;
+  width: 16.7%;
+}
+.col1{
+  width: 10%;
 }
 .main_block{
   justify-content: center;

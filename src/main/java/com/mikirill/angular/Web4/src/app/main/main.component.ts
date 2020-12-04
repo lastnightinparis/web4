@@ -70,11 +70,13 @@ export class MainComponent implements OnInit {
     } else {
       this.currentUser = localStorage.getItem('user');
     }
-    let points = localStorage.getItem('dots').split(';');
-    console.log(points.toString());
-    for (let i = 0; i < points.length - 2; i += 3) {
-      this.createDot(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
-      this.saveDots(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
+    if (localStorage.getItem('dots') !== null) {
+      let points = localStorage.getItem('dots').split(';');
+      console.log(points.toString());
+      for (let i = 0; i < points.length - 2; i += 3) {
+        this.createDot(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
+        this.saveDots(Number(points[i]), Number(points[i + 1]), Number(points[i + 2]));
+      }
     }
   }
 
@@ -182,6 +184,7 @@ export class MainComponent implements OnInit {
 
   onExit() {
     sessionStorage.setItem('main', 'no');
+    localStorage.clear();
   }
 
   resetSVG() {

@@ -37,14 +37,13 @@ public class SecurityController implements ErrorController {
     @PostMapping(value = "/authenticate", consumes = "application/json")
     @ResponseBody
     public String generateToken(@RequestBody AuthRequest auth) {
-        String password = BCrypt.hashpw(auth.getPassword(), BCrypt.gensalt());
+        String password = BCrypt.hashpw(auth.getPassword(), "$2a$10$llw0G6IyibUob8h5XRt9xuRczaGdCm/AiV6SSjf5v78XS824EGbh.");
         try {
-            if (repository.findByUsername(auth.getUsername()) == null) {
+            if (repository.findByUsername(auth.getUsername()) == null)
                 repository.save(new ApplicationUser(auth.getUsername(), password));
-            }
-            System.out.println(BCrypt.checkpw(password, repository.findByUsername(auth.getUsername()).getPassword()));
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(auth.getUsername(), password));
+                    new UsernamePasswordAuthenticationToken(auth.getUsername(), password)
+            );
         } catch (Exception e) {
             System.out.println("non authenticate");
             return "{\"token\": \"" + "bad" + "\"}";

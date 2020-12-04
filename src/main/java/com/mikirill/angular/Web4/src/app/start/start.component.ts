@@ -36,6 +36,7 @@ export class StartComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    localStorage.clear();
     console.log(sessionStorage.getItem('main'));
     if (sessionStorage.getItem('main') === 'yes') {
       this.router.navigateByUrl("/main");
@@ -78,7 +79,9 @@ export class StartComponent implements OnInit {
       this.user = this.userform.value;
       this.mainServer.setCurrentUser(this.user.username);//хуйня, надо индетифицировать клиента и взять из бд
       //  сделать отправку
-      localStorage.setItem("user", this.user.username);
+      localStorage.setItem("user", this.mainServer.currentUser);
+      console.log(this.user.username);
+      console.log(this.user);
       this.authService.login(this.user);
       console.log("успешно отправлено");
     }

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class PointRequest {
 
     private String username;
-    private Integer r;
-    private Integer x;
+    private Double r;
+    private Double x;
     private Double y;
 
     public String getUsername() {
@@ -24,19 +24,19 @@ public class PointRequest {
         this.username = jsessionid;
     }
 
-    public Integer getR() {
+    public Double getR() {
         return r;
     }
 
-    public void setR(Integer r) {
+    public void setR(Double r) {
         this.r = r;
     }
 
-    public Integer getX() {
+    public Double getX() {
         return x;
     }
 
-    public void setX(Integer x) {
+    public void setX(Double x) {
         this.x = x;
     }
 

@@ -26,7 +26,7 @@ public class Dot implements Serializable {
     @Column(name = "y_value")
     private double y_value;
     @Column(name = "r_value")
-    private int r_value;
+    private double r_value;
     @Column(name = "script_time")
     private double script_time;
     @Column(name = "cur_timestamp")
@@ -60,11 +60,11 @@ public class Dot implements Serializable {
         this.y_value = y_value;
     }
 
-    public int getR_value() {
+    public double getR_value() {
         return r_value;
     }
 
-    public void setR_value(int r_value) {
+    public void setR_value(double r_value) {
         this.r_value = r_value;
     }
 

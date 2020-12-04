@@ -70,27 +70,23 @@
     </svg>
   </div>
   <div id="result_table">
-    <p-table [value]="rows" class="p-datatable	p-datatable-header">
-      <ng-template pTemplate="header">
+    <table class="p-datatable	p-datatable-header">
         <tr>
-          <th class="columns">X</th>
-          <th class="columns">Y</th>
-          <th class="columns">R</th>
+          <th class="col1">X</th>
+          <th class="col1">Y</th>
+          <th class="col1">R</th>
           <th class="columns">Current time</th>
           <th class="columns">Execute Time</th>
           <th class="columns">Hit result</th>
         </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-row>
-        <tr>
-          <td class="columns">{{row.x}}</td>
-          <td class="columns">{{row.y}}</td>
-          <td class="columns">{{row.r}}</td>
-          <td class="columns">{{row.currentTime}}</td>
-          <td class="columns">{{row.scriptTime}}</td>
-          <td class="columns">{{row.hitResult}}</td>
+        <tr *ngFor="let point of rows">
+          <td class="col1">{{point.x_value}}</td>
+          <td class="col1">{{point.y_value}}</td>
+          <td class="col1">{{point.r_value}}</td>
+          <td class="columns">{{point.current_time}}</td>
+          <td class="columns">{{point.script_time}}</td>
+          <td class="columns">{{point.hit_result}}</td>
         </tr>
-      </ng-template>
-    </p-table>
+    </table>
   </div>
 </div>

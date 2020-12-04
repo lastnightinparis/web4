@@ -42,7 +42,7 @@ span {
   width: 50%;
 }
 table {
-  background-color: #E6E6FA;
+  background-color: ghostwhite;
   margin: auto;
 }
 
@@ -94,6 +94,10 @@ p-slider, p-dropdown {
 }
 .columns{
   word-wrap: break-word;
+  width: 16.7%;
+}
+.col1{
+  width: 10%;
 }
 .main_block{
   justify-content: center;

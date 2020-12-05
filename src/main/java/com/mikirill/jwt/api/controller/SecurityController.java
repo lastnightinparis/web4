@@ -22,8 +22,6 @@ import org.w3c.dom.ls.LSOutput;
 @Controller
 public class SecurityController implements ErrorController {
 
-//    private String salt = "wqe842190rqfkvqab";
-
     @Autowired
     private ApplicationUserRepository repository;
 

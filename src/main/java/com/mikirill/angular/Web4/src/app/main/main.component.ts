@@ -5,6 +5,7 @@ import {TableValues} from "./tableValues";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -32,7 +33,7 @@ export class MainComponent implements OnInit {
   valuesR: SelectItem[];
   currentUser: string;
 
-  constructor(private mainService: MainService, private confirmationService: ConfirmationService, private http: HttpClient) {
+  constructor(private mainService: MainService, private confirmationService: ConfirmationService, private http: HttpClient, private router:Router) {
     this.valuesX = [
       {label: '-2', value: -2},
       {label: '-1.5', value: -1.5},
@@ -206,6 +207,12 @@ export class MainComponent implements OnInit {
   }
 
   commitPoint(username: string, r: number, x: number, y: number) {
+    if (localStorage.getItem("token") === null || localStorage.getItem("user") === null) {
+      this.showModalDialog("Ваша сессия более недействительна");
+      localStorage.clear();
+      this.router.navigateByUrl("/start");
+      return;
+    }
 
     // this.http.get(this.url_test, {});
     this.http.post<any>(this.url, {
@@ -246,11 +253,13 @@ export class MainComponent implements OnInit {
     let params = new HttpParams().set("username", username);
     return this.http.get<any>(this.url, {params: params}).pipe(map(points => points.map(point => new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]))));
   }
+
   getXSVG(x, r): number {
     return x * 100 / r + 150;
   }
+
   getYSVG(y, r): number {
-    return 150 - y * 100 /r;
+    return 150 - y * 100 / r;
   }
 
 }

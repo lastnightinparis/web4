@@ -34,7 +34,6 @@ public class DotController {
 
     @PostMapping(value = "/points", produces = "application/json")
     public Dot addPoint(@RequestBody PointRequest point) {
-        System.out.println("inserting");
         Dot dot = new Dot();
         String res;
         dot.setJsessionid(point.getUsername());
@@ -42,12 +41,12 @@ public class DotController {
         dot.setX_value(point.getX());
         dot.setY_value(point.getY());
         dot.setCurrent_time(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
-        long time = System.currentTimeMillis();
+        long time = System.nanoTime();
         if (dotService.validate(point.getX(), point.getY(), point.getR())) {
             res = dotService.checkArea(point.getX(), point.getY(), point.getR()) ? "TRUE" : "FALSE";
         } else res = "ERROR";
         dot.setHit_result(res);
-        dot.setScript_time(System.currentTimeMillis() - time);
+        dot.setScript_time(System.nanoTime() - time);
         dotRepository.save(dot);
         return dot;
     }

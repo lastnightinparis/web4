@@ -25,7 +25,7 @@
     "angular-jwt": "^0.1.11",
     "core-js": "^2.5.4",
     "primeflex": "^2.0.0",
-    "primeicons": "^4.0.0",
+    "primeicons": "^4.1.0",
     "primeng": "^10.0.3",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",

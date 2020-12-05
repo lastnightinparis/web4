@@ -159,7 +159,7 @@ export class MainComponent implements OnInit {
   }
 
   saveDots(cx, cy, r) {
-    this.dots += cx.toString() + ';' + cy.toString() + ';' + r.toString() + ';';
+    this.dots += this.getXCoord(cx, r).toString() + ';' + this.getYCoord(cy, r).toString() + ';' + r.toString() + ';';
     localStorage.setItem('dots', this.dots);
   }
 
@@ -168,9 +168,10 @@ export class MainComponent implements OnInit {
       this.dots = '';
       document.querySelectorAll("circle").forEach((e) => e.remove());
       let points = localStorage.getItem('dots').split(';');
+      console.log(points.toString());
       for (let i = 0; i < points.length - 2; i += 3) {
-        let new_cx = (Number(points[i]) - 150) * Number(points[i + 2]) / this.valueR + 150;
-        let new_cy = 150 - (150 - Number(points[i + 1])) * Number(points[i + 2]) / this.valueR;
+        let new_cx = this.getXSVG(points[i], this.valueR);
+        let new_cy = this.getYSVG(points[i + 1], this.valueR);
         this.createDot(new_cx, new_cy, this.valueR);
         this.saveDots(new_cx, new_cy, this.valueR);
       }
@@ -181,7 +182,7 @@ export class MainComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Do you want to reset table and coordinate plane ?',
       header: 'Reset Confirmation',
-      icon: 'pi pi-info-circle',
+      // icon: 'pi pi-info-circle',
       accept: () => {
         this.resetSVG();
         this.deletePoints(localStorage.getItem("user"));

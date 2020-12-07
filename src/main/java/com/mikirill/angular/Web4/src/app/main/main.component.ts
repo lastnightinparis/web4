@@ -3,9 +3,10 @@ import {ConfirmationService, Message, SelectItem} from 'primeng/api';
 import {MainService} from "../services/main.service";
 import {TableValues} from "./tableValues";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {map} from "rxjs/operators";
+import {delay, map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-main',
@@ -14,8 +15,11 @@ import {Router} from "@angular/router";
 })
 
 export class MainComponent implements OnInit {
-  url = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/points";
-  url_test = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
+  //url = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/points";
+  url = "http://localhost:3800/spring-security-jwt-example-0.0.1-SNAPSHOT/points";
+  url_test = "http://localhost:3800/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
+  //url_test = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
+  //spring.datasource.url=jdbc:postgresql://pg:5432/studs
   selectedValues = {
     valueX: 0,
     valueY: 0,
@@ -33,7 +37,7 @@ export class MainComponent implements OnInit {
   valuesR: SelectItem[];
   currentUser: string;
 
-  constructor(private mainService: MainService, private confirmationService: ConfirmationService, private http: HttpClient, private router:Router) {
+  constructor(private mainService: MainService, private confirmationService: ConfirmationService, private http: HttpClient, private router: Router, private authService: AuthService) {
     this.valuesX = [
       {label: '-2', value: -2},
       {label: '-1.5', value: -1.5},
@@ -114,7 +118,6 @@ export class MainComponent implements OnInit {
       let x = ((cx - 150) * this.valueR / 100);
       let y = (150 - cy) * this.valueR / 100;
       if (this.checkODZ(cx, cy, this.valueR)) {
-        console.log(typeof this.valueR);
         this.createDot(cx, cy, this.valueR);
         this.saveDots(cx, cy, this.valueR);
         this.commitPoint(localStorage.getItem("user"), this.valueR, x, y);
@@ -168,7 +171,6 @@ export class MainComponent implements OnInit {
       this.dots = '';
       document.querySelectorAll("circle").forEach((e) => e.remove());
       let points = localStorage.getItem('dots').split(';');
-      console.log(points.toString());
       for (let i = 0; i < points.length - 2; i += 3) {
         let new_cx = this.getXSVG(points[i], this.valueR);
         let new_cy = this.getYSVG(points[i + 1], this.valueR);
@@ -207,27 +209,26 @@ export class MainComponent implements OnInit {
     this.displayModal = true;
   }
 
-  commitPoint(username: string, r: number, x: number, y: number) {
+  async commitPoint(username: string, r: number, x: number, y: number) {
     if (localStorage.getItem("token") === null || localStorage.getItem("user") === null) {
-      this.showModalDialog("Ваша сессия более недействительна");
       localStorage.clear();
       this.router.navigateByUrl("/start");
       return;
     }
-
-    // this.http.get(this.url_test, {});
     this.http.post<any>(this.url, {
       "username": username,
       "x": x,
       "y": y,
       "r": r,
     }).subscribe(point => {
-      this.currentPoint = new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]);
-      console.log(this.currentPoint.hit_result);
-      this.rows.push(this.currentPoint);
-    });
-
-    console.log("commit point");
+        this.currentPoint = new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]);
+        this.rows.push(this.currentPoint);
+      },
+      error => {
+        localStorage.clear();
+        this.router.navigateByUrl("/start");
+      }
+    );
     // this.mainService.getTableValue(this.url).subscribe(points => console.log(points));
   }
 

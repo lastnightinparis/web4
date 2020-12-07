@@ -11,8 +11,10 @@ import {JwtHelperService} from '@auth0/angular-jwt';
 
 export class AuthService {
   jwt = new JwtHelperService();
-  url_auth = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/authenticate";
+  url_auth = "http://localhost:3800/spring-security-jwt-example-0.0.1-SNAPSHOT/authenticate";
+  //url_auth = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/authenticate";
   url_sign = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/sign-in";
+  //url_sign = "http://localhost:3800/spring-security-jwt-example-0.0.1-SNAPSHOT/sign-in";
 
   constructor(private http: HttpClient, private router: Router) {
   }

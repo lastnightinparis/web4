@@ -9,12 +9,12 @@
 <div id="main_page">
   <div id="form_block" class="main_block">
     <div class="values">X value</div>
-    <p-dropdown [options]="valuesX" [showClear]="true" [(ngModel)]="valueX" placeholder="Select X"
+    <p-dropdown [options]="valuesX" [(ngModel)]="valueX" placeholder="Select X"
                 [virtualScroll]="true" [itemSize]="31" [filter]="false" p-input-filled></p-dropdown>
     <div class="values">Y value: {{valueY}}</div>
     <p-slider [(ngModel)]="valueY" [min]="-3" [max]="5" [step]="1" [style]="{width:'15vw'}"></p-slider>
     <div class="values">R value</div>
-    <p-dropdown [options]="valuesR" [showClear]="true" [(ngModel)]="valueR" placeholder="Select R"
+    <p-dropdown [options]="valuesR" [(ngModel)]="valueR" placeholder="Select R"
                 [virtualScroll]="true" [itemSize]="31" [filter]="false" (onChange)="updateDots()"></p-dropdown>
     <br>
     <button class="buttons" pButton label="Send" type="submit" (click)="onSubmit()"></button>

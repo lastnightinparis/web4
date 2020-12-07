@@ -53,7 +53,7 @@ button{
   font-family: monospace;
 }
 input, label{
-  width: 40vw;
+  width: 20vw;
 }
 @media (max-width: 550px) {
   button{

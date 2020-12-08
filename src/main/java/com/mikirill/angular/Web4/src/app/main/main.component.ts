@@ -20,6 +20,7 @@ export class MainComponent implements OnInit {
   url_test = "http://localhost:3800/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
   //url_test = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
   //spring.datasource.url=jdbc:postgresql://pg:5432/studs
+  //jdbc:postgresql://localhost:4000/studs
   selectedValues = {
     valueX: 0,
     valueY: 0,
@@ -77,7 +78,10 @@ export class MainComponent implements OnInit {
         let points = this.dots.split(';');
         console.log(points.toString());
         for (let i = 0; i < points.length - 2; i += 3) {
-          this.createDot(this.getXSVG(Number(points[i]), Number(points[i + 2])), this.getYSVG(Number(points[i + 1]), Number(points[i + 2])), Number(points[i + 2]));
+          try {
+            this.createDot(this.getXSVG(Number(points[i]), Number(points[i + 2])), this.getYSVG(Number(points[i + 1]), Number(points[i + 2])), Number(points[i + 2]));
+          } catch (e) {
+          }
         }
       }
     });
@@ -138,10 +142,14 @@ export class MainComponent implements OnInit {
 
   createDot(cx, cy, r) {
     const circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
-    circle.setAttribute('cx', cx.toString());
-    circle.setAttribute('cy', cy.toString());
+    try {
+      circle.setAttribute('cx', cx.toString());
+      circle.setAttribute('cy', cy.toString());
+    } catch (e) {
+
+    }
     circle.setAttribute('r', "3");
-    circle.setAttribute('fill-opacity', "0.3")
+    circle.setAttribute('fill-opacity', "0.3");
     circle.setAttribute('class', 'points');
     if (this.checkArea(cx, cy, r)) {
       circle.setAttribute("fill", "#2E8B57");

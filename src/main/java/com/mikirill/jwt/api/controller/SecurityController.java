@@ -35,7 +35,7 @@ public class SecurityController implements ErrorController {
     @PostMapping(value = "/authenticate", consumes = "application/json")
     @ResponseBody
     public String generateToken(@RequestBody AuthRequest auth) {
-        String password = BCrypt.hashpw(auth.getPassword(), "$2a$10$llw0G6IyibUob8h5XRt9xuRczaGdCm/AiV6SSjf5v78XS824EGbh.");
+        String password = BCrypt.hashpw(auth.getPassword(), getSalt());
         try {
             if (repository.findByUsername(auth.getUsername()) == null)
                 repository.save(new ApplicationUser(auth.getUsername(), password));

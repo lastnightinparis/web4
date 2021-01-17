@@ -15,12 +15,7 @@ import {AuthService} from "../services/auth.service";
 })
 
 export class MainComponent implements OnInit {
-  //url = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/points";
-  url = "http://localhost:3800/spring-security-jwt-example-0.0.1-SNAPSHOT/points";
-  url_test = "http://localhost:3800/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
-  //url_test = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
-  //spring.datasource.url=jdbc:postgresql://pg:5432/studs
-  //jdbc:postgresql://localhost:4000/studs
+  url = "url";
   selectedValues = {
     valueX: 0,
     valueY: 0,
@@ -78,10 +73,7 @@ export class MainComponent implements OnInit {
         let points = this.dots.split(';');
         console.log(points.toString());
         for (let i = 0; i < points.length - 2; i += 3) {
-          try {
-            this.createDot(this.getXSVG(Number(points[i]), Number(points[i + 2])), this.getYSVG(Number(points[i + 1]), Number(points[i + 2])), Number(points[i + 2]));
-          } catch (e) {
-          }
+          this.createDot(this.getXSVG(Number(points[i]), Number(points[i + 2])), this.getYSVG(Number(points[i + 1]), Number(points[i + 2])), Number(points[i + 2]));
         }
       }
     });
@@ -107,8 +99,10 @@ export class MainComponent implements OnInit {
       this.selectedValues.valueX = this.valueX;
       this.selectedValues.valueY = this.valueY;
       this.selectedValues.valueR = this.valueR;
-      this.createDot(this.valueX * 100 / this.valueR + 150, 150 - this.valueY * 100 / this.valueR, this.valueR);
-      this.saveDots(this.valueX * 100 / this.valueR + 150, 150 - this.valueY * 100 / this.valueR, this.valueR);
+      // let x = ((cx - 150) * this.valueR / 100);
+      // let y = (150 - cy) * this.valueR / 100;
+      this.createDot(this.getXSVG(this.valueX, this.valueR), this.getYSVG(this.valueY, this.valueR), this.valueR);
+      this.saveDots(this.getXSVG(this.valueX, this.valueR), this.getYSVG(this.valueY, this.valueR), this.valueR);
       this.commitPoint(localStorage.getItem("user"), this.valueR, this.valueX, this.valueY);
     }
   }
@@ -141,13 +135,11 @@ export class MainComponent implements OnInit {
   }
 
   createDot(cx, cy, r) {
+    if (!this.checkODZ(cx, cy, r))
+      return;
     const circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
-    try {
-      circle.setAttribute('cx', cx.toString());
-      circle.setAttribute('cy', cy.toString());
-    } catch (e) {
-
-    }
+    circle.setAttribute('cx', cx.toString());
+    circle.setAttribute('cy', cy.toString());
     circle.setAttribute('r', "3");
     circle.setAttribute('fill-opacity', "0.3");
     circle.setAttribute('class', 'points');

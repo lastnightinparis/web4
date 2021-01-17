@@ -39,7 +39,6 @@ export class StartComponent implements OnInit {
     console.log(sessionStorage.getItem('main') === 'yes');
     if (sessionStorage.getItem('main') === 'yes') {
       this.router.navigate(["/main"]);
-      console.log('lol');
     } else {
       localStorage.clear();
     }
@@ -79,7 +78,7 @@ export class StartComponent implements OnInit {
   onSubmit() {
     if (this.formErrors.username === '' && this.formErrors.password === '') {
       this.user = this.userform.value;
-      this.mainServer.setCurrentUser(this.user.username);//хуйня, надо индетифицировать клиента и взять из бд
+      this.mainServer.setCurrentUser(this.user.username);
       //  сделать отправку
       localStorage.setItem("user", this.mainServer.currentUser);
       console.log(this.user.username);

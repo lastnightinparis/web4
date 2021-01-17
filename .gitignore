@@ -3,7 +3,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
+/node_modules
+.mvn
+.gitignore
 ### STS ###
 .apt_generated
 .classpath
@@ -14,11 +16,18 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
+src/test
+target
+src/main/webapp
+src/main/webapp/*
 .idea
 *.iws
 *.iml
 *.ipr
-
+mvnw.cmd
+mvnw
+LICENSE
+pom.xml
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -31,7 +40,6 @@ build/
 *.cmd
 /node_modules
 /.mvn
-mvnw
 .vscode/
 .idea/
 /target

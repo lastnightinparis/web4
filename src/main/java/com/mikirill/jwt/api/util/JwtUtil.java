@@ -20,7 +20,7 @@ import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
  */
 @Service
 public class JwtUtil {
-    private String secret = "secret";
+    private String secret = getSecret();
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

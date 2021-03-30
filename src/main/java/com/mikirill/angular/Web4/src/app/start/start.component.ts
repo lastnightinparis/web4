@@ -3,6 +3,7 @@ import {MainService} from "../services/main.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
+import {StartService} from "../services/start.service";
 
 @Component({
   selector: 'app-start',
@@ -14,24 +15,10 @@ export class StartComponent implements OnInit {
     username: string;
     password: string;
   };
-  formErrors = {
-    'password': '',
-    'username': '',
-  };
-  messageErrors = {
-    'password': {
-      'required': 'Password is required'
-    },
-    'username': {
-      'required': 'Username is required',
-    }
-  };
   userform: FormGroup;
-  // username = '';
-  // password = '';
   @ViewChild('start_form') startFormDirective;
 
-  constructor(private router: Router, private mainServer: MainService, private fb: FormBuilder, private authService: AuthService) {
+  constructor(private router: Router, private mainServer: MainService, private fb: FormBuilder, private authService: AuthService, public startService: StartService) {
     this.createForm();
   }
 
@@ -39,6 +26,7 @@ export class StartComponent implements OnInit {
     console.log(sessionStorage.getItem('main') === 'yes');
     if (sessionStorage.getItem('main') === 'yes') {
       this.router.navigate(["/main"]);
+      console.log('lol');
     } else {
       localStorage.clear();
     }
@@ -49,37 +37,14 @@ export class StartComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
-    this.userform.valueChanges.subscribe((data) => this.onValueChange(data));
-    this.onValueChange();
-  }
-
-  onValueChange(data?: any) {
-    if (!this.userform) {
-      return;
-    }
-    const form = this.userform;
-    for (const field in this.formErrors) {
-      if (this.formErrors.hasOwnProperty(field)) {
-        // clear previous error message (if any)
-        this.formErrors[field] = '';
-        const control = form.get(field);
-        if (control && control.dirty && !control.valid) {
-          const messages = this.messageErrors[field];
-          for (const key in control.errors) {
-            if (control.errors.hasOwnProperty(key)) {
-              this.formErrors[field] += messages[key] + ' ';
-            }
-          }
-        }
-      }
-    }
+    this.userform.valueChanges.subscribe((data) => this.startService.onValueChange(data, this.userform));
+    this.startService.onValueChange(null, this.userform);
   }
 
   onSubmit() {
-    if (this.formErrors.username === '' && this.formErrors.password === '') {
+    if (this.startService.getFormErrors().username === '' && this.startService.getFormErrors().password === '') {
       this.user = this.userform.value;
       this.mainServer.setCurrentUser(this.user.username);
-      //  сделать отправку
       localStorage.setItem("user", this.mainServer.currentUser);
       console.log(this.user.username);
       console.log(this.user);

@@ -3,10 +3,9 @@ import {ConfirmationService, Message, SelectItem} from 'primeng/api';
 import {MainService} from "../services/main.service";
 import {TableValues} from "./tableValues";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {delay, map} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
-import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-main',
@@ -15,7 +14,8 @@ import {AuthService} from "../services/auth.service";
 })
 
 export class MainComponent implements OnInit {
-  url = "url";
+  url = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/points";
+  url_test = "http://localhost:8080/spring-security-jwt-example-0.0.1-SNAPSHOT/hello";
   selectedValues = {
     valueX: 0,
     valueY: 0,
@@ -33,7 +33,7 @@ export class MainComponent implements OnInit {
   valuesR: SelectItem[];
   currentUser: string;
 
-  constructor(private mainService: MainService, private confirmationService: ConfirmationService, private http: HttpClient, private router: Router, private authService: AuthService) {
+  constructor(private mainService: MainService, private confirmationService: ConfirmationService, private http: HttpClient, private router: Router) {
     this.valuesX = [
       {label: '-2', value: -2},
       {label: '-1.5', value: -1.5},
@@ -46,11 +46,6 @@ export class MainComponent implements OnInit {
       {label: '2', value: 2}
     ];
     this.valuesR = [
-      // {label:'-2', value: -2},
-      // {label:'-1.5', value: -1.5},
-      // {label:'-1', value: -1},
-      // {label:'-0.5', value: -0.5},
-      // {label:'0', value: 0},
       {label: '0.5', value: 0.5},
       {label: '1', value: 1},
       {label: '1.5', value: 1.5},
@@ -59,33 +54,8 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(sessionStorage.getItem('main'));
-    this.getExistingValues(localStorage.getItem("user")).subscribe(values => {
-      this.rows = values;
-      console.log(this.rows.toString());
-      this.dots = '';
-      for (let point of this.rows) {
-        this.dots += point.x_value + ";" + point.y_value + ";" + point.r_value + ";";
-      }
-      console.log(this.dots);
-      localStorage.setItem('dots', this.dots);
-      if (this.dots !== '') {
-        let points = this.dots.split(';');
-        console.log(points.toString());
-        for (let i = 0; i < points.length - 2; i += 3) {
-          this.createDot(this.getXSVG(Number(points[i]), Number(points[i + 2])), this.getYSVG(Number(points[i + 1]), Number(points[i + 2])), Number(points[i + 2]));
-        }
-      }
-    });
-    this.mainService.getCurrentUser().subscribe(user => {
-      this.currentUser = user;
-    });
-    console.log(this.mainService.getCurrentUser().subscribe(user1 => console.log(user1)));
-    if (this.currentUser !== undefined) {
-      localStorage.setItem('user', this.currentUser);
-    } else {
-      this.currentUser = localStorage.getItem('user');
-    }
+    this.getDBData();
+    this.setCurrentUser();
   }
 
   onSubmit() {
@@ -99,14 +69,15 @@ export class MainComponent implements OnInit {
       this.selectedValues.valueX = this.valueX;
       this.selectedValues.valueY = this.valueY;
       this.selectedValues.valueR = this.valueR;
-      // let x = ((cx - 150) * this.valueR / 100);
-      // let y = (150 - cy) * this.valueR / 100;
-      this.createDot(this.getXSVG(this.valueX, this.valueR), this.getYSVG(this.valueY, this.valueR), this.valueR);
-      this.saveDots(this.getXSVG(this.valueX, this.valueR), this.getYSVG(this.valueY, this.valueR), this.valueR);
+      this.createDot(this.mainService.getXSVG(this.valueX, this.valueR),
+        this.mainService.getYSVG(this.valueY, this.valueR), this.valueR);
+      this.dots = this.mainService
+        .saveDots(this.mainService.getXSVG(this.valueX, this.valueR),
+          this.mainService.getYSVG(this.valueY, this.valueR),
+          this.valueR, this.dots);
       this.commitPoint(localStorage.getItem("user"), this.valueR, this.valueX, this.valueY);
     }
   }
-
 
   svgClick(event) {
     let dim = document.getElementById('svg').getBoundingClientRect();
@@ -115,9 +86,10 @@ export class MainComponent implements OnInit {
     if (this.valueR !== undefined && this.valueR !== null) {
       let x = ((cx - 150) * this.valueR / 100);
       let y = (150 - cy) * this.valueR / 100;
-      if (this.checkODZ(cx, cy, this.valueR)) {
+      if (this.mainService.checkODZ(cx, cy, this.valueR)) {
+        console.log(typeof this.valueR);
         this.createDot(cx, cy, this.valueR);
-        this.saveDots(cx, cy, this.valueR);
+        this.mainService.saveDots(cx, cy, this.valueR, this.dots);
         this.commitPoint(localStorage.getItem("user"), this.valueR, x, y);
       } else {
         this.showModalDialog('Значения для X или Y выходят за допустимый диапозон');
@@ -127,57 +99,9 @@ export class MainComponent implements OnInit {
     }
   }
 
-
-  checkODZ(cx, cy, r): boolean {
-    let x = ((cx - 150) * r / 100);
-    let y = (150 - cy) * r / 100;
-    return (x >= -2 && x <= 2 && y >= -3 && y <= 5);
-  }
-
   createDot(cx, cy, r) {
-    if (!this.checkODZ(cx, cy, r))
-      return;
-    const circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
-    circle.setAttribute('cx', cx.toString());
-    circle.setAttribute('cy', cy.toString());
-    circle.setAttribute('r', "3");
-    circle.setAttribute('fill-opacity', "0.3");
-    circle.setAttribute('class', 'points');
-    if (this.checkArea(cx, cy, r)) {
-      circle.setAttribute("fill", "#2E8B57");
-      circle.setAttribute('stroke', "#2E8B57");
-    } else {
-      circle.setAttribute("fill", "#800000");
-      circle.setAttribute('stroke', "#800000");
-    }
-    console.log(cx + ' ' + cy + ' ' + r + ' ');
+    const circle = this.mainService.createDot(cx, cy, r);
     document.getElementById('svg').appendChild(circle);
-  }
-
-  checkArea(cx, cy, r): boolean {
-    //проверка попадания точки в область при клике на свг
-    let x = this.getXCoord(cx, r);
-    let y = this.getYCoord(cy, r);
-    return (x <= 0 && y >= 0 && x >= -r && y <= r / 2) || (x >= 0 && y <= 0 && x * x + y * y <= (r * r) / 4) || (x <= 0 && y <= 0 && y >= -x - r / 2);
-  }
-
-  saveDots(cx, cy, r) {
-    this.dots += this.getXCoord(cx, r).toString() + ';' + this.getYCoord(cy, r).toString() + ';' + r.toString() + ';';
-    localStorage.setItem('dots', this.dots);
-  }
-
-  updateDots() {
-    if (this.dots != '' && this.valueR !== null) {
-      this.dots = '';
-      document.querySelectorAll("circle").forEach((e) => e.remove());
-      let points = localStorage.getItem('dots').split(';');
-      for (let i = 0; i < points.length - 2; i += 3) {
-        let new_cx = this.getXSVG(points[i], this.valueR);
-        let new_cy = this.getYSVG(points[i + 1], this.valueR);
-        this.createDot(new_cx, new_cy, this.valueR);
-        this.saveDots(new_cx, new_cy, this.valueR);
-      }
-    }
   }
 
   confirm() {
@@ -198,9 +122,23 @@ export class MainComponent implements OnInit {
     localStorage.clear();
   }
 
+  updateDots() {
+    if (this.dots != '' && this.valueR !== null) {
+      this.dots = '';
+      document.querySelectorAll("circle").forEach((e) => e.remove());
+      let points = localStorage.getItem('dots').split(';');
+      for (let i = 0; i < points.length - 2; i += 3) {
+        let new_cx = this.mainService.getXSVG(points[i], this.valueR);
+        let new_cy = this.mainService.getYSVG(points[i + 1], this.valueR);
+        this.createDot(new_cx, new_cy, this.valueR);
+        this.dots = this.mainService.saveDots(new_cx, new_cy, this.valueR, this.dots);
+      }
+    }
+  }
+
   resetSVG() {
     this.dots = '';
-    localStorage.setItem('dots', this.dots);
+    localStorage.setItem('dots', '');
     document.querySelectorAll("circle").forEach((e) => e.remove());
   }
 
@@ -209,60 +147,60 @@ export class MainComponent implements OnInit {
     this.displayModal = true;
   }
 
-  async commitPoint(username: string, r: number, x: number, y: number) {
-    if (localStorage.getItem("token") === null || localStorage.getItem("user") === null) {
-      localStorage.clear();
-      this.router.navigateByUrl("/start");
-      return;
-    }
-    this.http.post<any>(this.url, {
-      "username": username,
-      "x": x,
-      "y": y,
-      "r": r,
-    }).subscribe(point => {
-        this.currentPoint = new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]);
-        this.rows.push(this.currentPoint);
-      },
-      error => {
-        localStorage.clear();
-        this.router.navigateByUrl("/start");
-      }
-    );
-    // this.mainService.getTableValue(this.url).subscribe(points => console.log(points));
-  }
-
   getData(res: Response) {
     return res.json();
   }
 
   deletePoints(username: string) {
-    this.http.delete(this.url, {
-      params: new HttpParams().set('username', username)
-    }).subscribe();
-    this.rows = [];
+    this.mainService.deletePoints(username, this.url).subscribe(
+      () => this.rows = [],
+      error => this.showModalDialog(error)
+  );
   }
 
-  getXCoord(cx, r): number {
-    return (cx - 150) * r / 100;
+  getDBData() {
+    this.mainService.getExistingValues(localStorage.getItem("user"), this.url).subscribe(values => {
+      this.rows = values;
+      this.dots = '';
+      for (let point of this.rows) {
+        this.dots += point.x_value + ";" + point.y_value + ";" + point.r_value + ";";
+      }
+      localStorage.setItem('dots', this.dots);
+      if (this.dots !== '') {
+        let points = this.dots.split(';');
+        for (let i = 0; i < points.length - 2; i += 3) {
+          this.createDot(this.mainService.getXSVG(Number(points[i]),
+            Number(points[i + 2])), this.mainService.getYSVG(Number(points[i + 1]),
+            Number(points[i + 2])), Number(points[i + 2]));
+        }
+      }
+    });
   }
 
-  getYCoord(cy, r): number {
-    return (150 - cy) * r / 100;
+  setCurrentUser() {
+    this.mainService.getCurrentUser().subscribe(user => {
+      this.currentUser = user;
+    }, error => this.showModalDialog(error));
+    if (this.currentUser !== undefined) {
+      localStorage.setItem('user', this.currentUser);
+    } else {
+      this.currentUser = localStorage.getItem('user');
+    }
   }
 
-  getExistingValues(username: string): Observable<TableValues[]> {
-    let params = new HttpParams().set("username", username);
-    return this.http.get<any>(this.url, {params: params}).pipe(map(points => points.map(point => new TableValues(point["x_value"], point["y_value"], point["r_value"], point["current_time"], point["script_time"], point["hit_result"]))));
-  }
+  commitPoint(username: string, r: number, x: number, y: number) {
+    if (localStorage.getItem("token") === null || localStorage.getItem("user") === null) {
+      this.showModalDialog("Ваша сессия более недействительна");
+      localStorage.clear();
+      this.router.navigateByUrl("/start");
+      return;
+    }
 
-  getXSVG(x, r): number {
-    return x * 100 / r + 150;
+    // this.http.get(this.url_test, {});
+    this.mainService.sendPoint(username, r, x, y, this.url).subscribe(point => {
+      this.currentPoint =  point;
+      this.rows.push(this.currentPoint);
+    }, error => this.showModalDialog(error));
   }
-
-  getYSVG(y, r): number {
-    return 150 - y * 100 / r;
-  }
-
 }
 

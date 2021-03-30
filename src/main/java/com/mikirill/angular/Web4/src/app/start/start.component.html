@@ -18,7 +18,7 @@
       <span class="p-float-label p-input-filled">
       <input id="float-input" type="text" pInputText formControlName="username" required/>
     <label for="float-input" class="label">Username</label>
-      <p-message severity="error" *ngIf="formErrors.username" text="{{formErrors.username}}"></p-message>
+      <p-message severity="error" *ngIf="this.startService.getFormErrors().username" text="{{this.startService.getFormErrors().username}}"></p-message>
 </span>
       <br>
       <div class="text_authorization">Enter your password</div>
@@ -26,7 +26,7 @@
       <span class="p-float-label p-input-filled">
       <input type="password" pPassword id="password_input" formControlName="password" required/>
       <label for="password_input">Password</label>
-      <p-message severity="error" *ngIf="formErrors.password" text="{{formErrors.password}}"></p-message>
+      <p-message severity="error" *ngIf="this.startService.getFormErrors().password" text="{{this.startService.getFormErrors().password}}"></p-message>
     </span>
       </div>
 
